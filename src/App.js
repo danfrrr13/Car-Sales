@@ -1,11 +1,16 @@
 import React from 'react';
 
+import { connect } from 'react-redux';
+
+import { removeFeature, addFeature } from './actions';
+
 import Header from './components/Header';
 import AddedFeatures from './components/AddedFeatures';
 import AdditionalFeatures from './components/AdditionalFeatures';
 import Total from './components/Total';
+import { isPropertySignature } from 'typescript';
 
-const App = () => {
+const App = props => {
   const state = {
     additionalPrice: 0,
     car: {
@@ -23,26 +28,31 @@ const App = () => {
     ]
   };
 
-  const removeFeature = item => {
+  const removeFeature = itemId => {
     // dispatch an action here to remove an item
+    props.removeFeature(itemId);
   };
 
-  const buyItem = item => {
+  const buyItem = itemId => {
     // dipsatch an action here to add an item
+    props.addFeature(itemId);
   };
 
   return (
     <div className="boxes">
       <div className="box">
-        <Header car={state.car} />
-        <AddedFeatures car={state.car} />
+        <Header />
+        <AddedFeatures removeFeature={removeFeature} />
       </div>
       <div className="box">
-        <AdditionalFeatures store={state.store} />
-        <Total car={state.car} additionalPrice={state.additionalPrice} />
+        <AdditionalFeatures addFeature={buyItem} />
+        <Total />
       </div>
     </div>
   );
 };
 
-export default App;
+export default connect(null, {
+  removeFeature,
+  addFeature
+})(App);
